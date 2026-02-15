@@ -7,11 +7,13 @@ export const insertEventSchema = z.object({
     description: z.string().max(400)
         .transform(val => val.toLowerCase()),
 
-    creator_id: z.uuid(),
+    creator: z.string().min(4).max(50)
+        .transform(val => val.toLowerCase()),
 
     tickets: z.number().int().positive().min(1),
 
-    event_date: z.coerce.date(),
+    event_date: z.coerce.date()
+        .refine(val => val > new Date(), "Event date must be in the future"),
 })
 
 export const updateEventSchema = insertEventSchema
@@ -34,14 +36,10 @@ export const eventFiltersSchema = insertEventSchema
     })
     .partial()
 
-export const eventSubscriptionSchema = z.object({
-    id: z.uuid(),
-    user_id: z.uuid(),
+export const insertSubscriptionSchema = z.object({
+    buyer: z.string().min(4).max(50)
+        .transform(val => val.toLowerCase()),
     event_id: z.uuid()
 })
 
-export const updateSubscriptionSchema = eventSubscriptionSchema
-    .omit({
-        id: true
-    })
-    .partial()
+export const updateSubscriptionSchema = insertSubscriptionSchema.partial()
