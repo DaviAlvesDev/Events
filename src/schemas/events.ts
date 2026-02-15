@@ -18,7 +18,8 @@ export const insertEventSchema = z.object({
 
 export const updateEventSchema = insertEventSchema
     .omit({
-        tickets: true
+        tickets: true,
+        creator: true,
     })
     .extend({
         new_tickets: z.number().int()
@@ -29,7 +30,8 @@ export const eventFiltersSchema = insertEventSchema
     .pick({
         name: true,
         tickets: true,
-        event_date: true
+        event_date: true,
+        creator: true,
     })
     .extend({
         id: z.uuid(),
