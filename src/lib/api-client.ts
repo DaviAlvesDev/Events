@@ -1,8 +1,29 @@
 import { ApiResponse } from "@/types/api"
 
 export async function apiClient(endpoint: string, options?: RequestInit): Promise<ApiResponse> {
+    // No seu apiClient
+    let baseUrl: string;
+    let url: string
+
+    if (typeof window !== "undefined") {
+        url = `/api/${endpoint}`;
+    } else {
+        // PRIORIDADE 1: Variável manual (mais segura)
+        if (process.env.NEXT_PUBLIC_API_URL) {
+            baseUrl = process.env.NEXT_PUBLIC_API_URL;
+        }
+        // PRIORIDADE 2: Variável automática da Vercel (precisa do https://)
+        else if (process.env.VERCEL_URL) {
+            baseUrl = `https://${process.env.VERCEL_URL}`;
+        }
+        // PRIORIDADE 3: Localhost
+        else {
+            baseUrl = "http://localhost:3000";
+        }
+        url = `${baseUrl}/api/${endpoint}`;
+    }
     try {
-        const res = await fetch(`/api/${endpoint}`, {
+        const res = await fetch(url, {
             ...options,
 
             headers: {

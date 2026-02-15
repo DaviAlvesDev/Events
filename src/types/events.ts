@@ -1,4 +1,4 @@
-import { events, subscriptions } from "@/db/schema"
+import { events, subscriptions } from "@/db/schemas"
 import { eventFiltersSchema, insertEventSchema, updateEventSchema, updateSubscriptionSchema } from "@/schemas/events"
 import z from "zod"
 

@@ -1,5 +1,5 @@
 import { db } from "@/db"
-import { events } from "@/db/schema"
+import { events } from "@/db/schemas"
 import { apiHandler } from "@/lib/api-handler"
 import { AppError } from "@/lib/errors"
 import { updateEventSchema } from "@/schemas/events"

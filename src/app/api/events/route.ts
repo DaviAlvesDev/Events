@@ -1,10 +1,12 @@
 import { db } from "@/db"
-import { events } from "@/db/schema"
+import { events } from "@/db/schemas"
 import { apiHandler } from "@/lib/api-handler"
 import { AppError } from "@/lib/errors"
 import { insertEventSchema } from "@/schemas/events"
 import { EventFilters } from "@/types/events"
 import { and, eq } from "drizzle-orm"
+
+export const dynamic = 'force-dynamic';
 
 export const GET = apiHandler(async (req: Request) => {
     const { searchParams } = new URL(req.url)
@@ -19,9 +21,11 @@ export const GET = apiHandler(async (req: Request) => {
 
     const data = await db
         .select().from(events)
-        .where(and(
-            ...conditions
-        ))
+        .where(
+            conditions.length > 0 ?
+                and(...conditions) :
+                undefined
+        )
 
     return {
         ok: true,
@@ -34,19 +38,27 @@ export const POST = apiHandler(async (req: Request) => {
     const body = await req.json()
     const data = insertEventSchema.parse(body)
 
-    const result = await db
-        .insert(events)
-        .values({
-            ...data
-        })
-        .returning()
+    try {
+        const result = await db
+            .insert(events)
+            .values({
+                ...data
+            })
+            .returning()
 
-    if (!result[0]) throw new AppError("An error occured while creating the event", 500)
+        if (!result[0]) throw new AppError("An error occured while creating the event", 500)
 
-    return {
-        ok: true,
-        status: 201,
-        msg: "Event created",
-        data: result[0]
+        return {
+            ok: true,
+            status: 201,
+            msg: "Event created",
+            data: result[0]
+        }
+    } catch (err) {
+        console.log("error:", err)
+        return {
+            ok: false,
+            status: 500
+        }
     }
 })

@@ -10,7 +10,7 @@ export const insertEventSchema = z.object({
     creator: z.string().min(4).max(50)
         .transform(val => val.toLowerCase()),
 
-    tickets: z.number().int().positive().min(1),
+    tickets: z.coerce.number().int().positive().min(1),
 
     event_date: z.coerce.date()
         .refine(val => val > new Date(), "Event date must be in the future"),
@@ -22,7 +22,7 @@ export const updateEventSchema = insertEventSchema
         creator: true,
     })
     .extend({
-        new_tickets: z.number().int()
+        new_tickets: z.coerce.number().int()
     })
     .partial()
 

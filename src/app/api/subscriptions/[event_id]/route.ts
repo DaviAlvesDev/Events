@@ -1,5 +1,5 @@
 import { db } from "@/db"
-import { events, subscriptions } from "@/db/schema"
+import { events, subscriptions } from "@/db/schemas"
 import { apiHandler } from "@/lib/api-handler"
 import { AppError } from "@/lib/errors"
 import { ApiContext } from "@/types/api"
