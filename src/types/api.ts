@@ -1,8 +1,11 @@
+import z from "zod"
+
 export type ApiResponse = {
     ok: boolean,
+    status: number,
     msg?: string,
     error?: string,
-    details?: Record<string, string | string[]>,
+    issues?: z.core.$ZodIssue[]
     data?: object | object[]
 }
 
@@ -12,5 +15,5 @@ export type ApiContext = {
 
 export type CommonApi = (
     req: Request,
-    context?: ApiContext
+    context: ApiContext
 ) => Promise<ApiResponse>
